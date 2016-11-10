@@ -12,7 +12,8 @@ angular.module('myApp.components')
                 sbTimeZone: "@"
             },
             controller: ["$scope", "$timeout", function ($scope, $timeout) {
-                $scope.$watch("ngModel", function (newVal, oldVal) {
+                var watchers=[];
+                watchers.push($scope.$watch("ngModel", function (newVal, oldVal) {
                     if (!isInnerUpdate) {
                         if (newVal && oldVal) {
                             if (!moment(newVal).isSame(moment(oldVal))) {
@@ -22,7 +23,7 @@ angular.module('myApp.components')
                             initInnerModel();
                         }
                     }
-                });
+                }));
                 initInnerModel();
 
                 function initInnerModel() {
@@ -41,15 +42,15 @@ angular.module('myApp.components')
                 //
                 var isModelDirty = false;
                 //
-                $scope.$watch("sbTimeZone", function (newVal, oldVal) {
+                watchers.push($scope.$watch("sbTimeZone", function (newVal, oldVal) {
                     onDateTimeChange();
-                });
-                $scope.$watch("date", function (newVal, oldVal) {
+                }));
+                watchers.push($scope.$watch("date", function (newVal, oldVal) {
                     onDateTimeChange();
-                });
-                $scope.$watch("time", function (newVal, oldVal) {
+                }));
+                watchers.push($scope.$watch("time", function (newVal, oldVal) {
                     onDateTimeChange();
-                });
+                }));
                 function onDateTimeChange() {
                     isModelDirty = true;
                     $scope.$evalAsync(function () {
@@ -87,6 +88,11 @@ angular.module('myApp.components')
                     var tzArray = [date.getFullYear(), date.getMonth(), date.getDate(), time.hour, time.minute];
                     return tzArray;
                 }
+                $scope.$on('$destroy', function () {
+                    while (watchers.length) {
+                        watchers.shift()();
+                    }
+                });
             }]
         }
     }]);

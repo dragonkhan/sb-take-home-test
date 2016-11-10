@@ -13,6 +13,7 @@ angular.module('myApp.components')
                 sbBeforeRenderItem: "="
             },
             controller: ["$scope", function ($scope) {
+                var watchers = [];
                 $scope.isTimePickerMenuVisible = false;
                 //
                 var AM = 'AM';
@@ -86,10 +87,10 @@ angular.module('myApp.components')
                     setTimeRows();
                 };
 
-                $scope.$watch("date", function (newVal, oldVal) {
+                watchers.push($scope.$watch("date", function (newVal, oldVal) {
                     onDateTimeChange();
-                });
-                $scope.$watch("ngModel", function (newVal, oldVal) {
+                }));
+                watchers.push($scope.$watch("ngModel", function (newVal, oldVal) {
                     onDateTimeChange();
                     //
                     if ($scope.ngModel) {
@@ -99,7 +100,7 @@ angular.module('myApp.components')
                             $scope.setMeridiem(AM);
                         }
                     }
-                });
+                }));
                 function onDateTimeChange() {
                     refreshTimes();
                     //
@@ -140,6 +141,11 @@ angular.module('myApp.components')
                         $scope.isTimePickerMenuVisible = !$scope.isTimePickerMenuVisible;
                     }
                 };
+                $scope.$on('$destroy', function () {
+                    while (watchers.length) {
+                        watchers.shift()();
+                    }
+                });
             }]
         }
     }]);

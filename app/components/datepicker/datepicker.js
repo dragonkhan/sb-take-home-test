@@ -10,6 +10,7 @@ angular.module('myApp.components')
                 sbBeforeRenderItem: "="
             },
             controller: ["$scope", function ($scope) {
+                var watchers=[];
                 $scope.weekDayNames = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
                 $scope.isDatePickerMenuVisible = false;
                 $scope.curMonth = moment();
@@ -61,7 +62,7 @@ angular.module('myApp.components')
                         $scope.toggleDatePickerMenu();
                     }
                 };
-                $scope.$watch("ngModel", function (newVal, oldVal) {
+                watchers.push($scope.$watch("ngModel", function (newVal, oldVal) {
                     if ($scope.ngModel == null) {
                         $scope.curMonth = moment();
                         $scope.inputLabel = null;
@@ -70,11 +71,16 @@ angular.module('myApp.components')
                         $scope.inputLabel = moment($scope.ngModel).format('dddd, MMMM Do, YYYY')
                     }
                     refreshCalendarWeeks();
-                });
+                }));
                 //
                 $scope.toggleDatePickerMenu = function () {
                     $scope.isDatePickerMenuVisible = !$scope.isDatePickerMenuVisible;
                 };
+                $scope.$on('$destroy', function () {
+                    while (watchers.length) {
+                        watchers.shift()();
+                    }
+                });
             }]
         }
     }]);
