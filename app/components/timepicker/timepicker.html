@@ -1,0 +1,30 @@
+<div class="timepicker">
+    <div class="timepicker-content">
+        <input class="timepicker-input" placeholder="Select time"
+               ng-value="ngModel | timefilter" ng-disabled="date==null"
+               ng-click="toggleTimePickerMenu()">
+        <i class="icon fa fa-clock-o"></i>
+        <div class="timepicker-menu" ng-show="isTimePickerMenuVisible">
+            <table>
+                <tbody>
+                <tr>
+                    <td colspan="4">{{date|date:'MMMM dd, yyyy'}}</td>
+                </tr>
+                <tr class="timepicker-controls">
+                    <td class="timepicker-control-meridiem" ng-class="{active:meridiem==selectedMeridiem}" colspan="2"
+                        ng-repeat="meridiem in meridiems"
+                        ng-click="setMeridiem(meridiem)">
+                        {{meridiem}}
+                    </td>
+                </tr>
+                <tr ng-repeat="timesRow in timesRows" class="ng-scope">
+                    <td class="timepicker-time"
+                        ng-class="{selected:ngModel.hour==time.hour&&ngModel.minute==time.minute, disabled:time.isDisabled}"
+                        ng-repeat="time in timesRow"
+                        ng-click="selectTime(time)">{{time | timefilter}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

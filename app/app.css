@@ -1,0 +1,172 @@
+/* app css stylesheet */
+
+.menu {
+    list-style: none;
+    border-bottom: 0.1em solid black;
+    margin-bottom: 2em;
+    padding: 0 0 0.5em;
+}
+
+.menu:before {
+    content: "[";
+}
+
+.menu:after {
+    content: "]";
+}
+
+.menu > li {
+    display: inline;
+}
+
+.menu > li + li:before {
+    content: "|";
+    padding-right: 0.3em;
+}
+
+td, th {
+    padding: 0;
+}
+
+body {
+    margin-top: 24px;
+    background-color: #eee;
+}
+
+.datepicker-content, .timepicker-content {
+    position: relative;
+}
+
+.datepicker-content > .icon, .timepicker-content > .icon {
+    position: absolute;
+    left: 13px;
+    top: 13px;
+}
+
+.datepicker .datepicker-input, .timepicker .timepicker-input {
+    padding-left: 42px;
+    margin-bottom: 0 !important;
+}
+
+.datepicker-input, .timepicker-input {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    border: 2px solid #e5e5e5;
+    border-radius: 0;
+    color: #333;
+    display: block;
+    font-size: 16px;
+    height: 43px;
+    line-height: 2;
+    margin-bottom: 10px;
+    outline: none;
+    padding-left: 12px;
+    padding-right: 5px;
+    vertical-align: middle;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.datepicker-menu > table, .timepicker-menu > table {
+    text-align: center;
+    margin-bottom: 0;
+    background-color: white;
+    border: 1px solid #cecece;
+}
+
+.datepicker-menu > table td, .timepicker-menu > table td {
+    cursor: pointer;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: none;
+    padding: 6px 8px;
+}
+
+.datepicker-menu > table .datepicker-weekday {
+    border-bottom: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
+    text-transform: uppercase;
+}
+
+.datepicker-day.faded, .timepicker-time.disabled {
+    color: #aaa;
+}
+
+.datepicker-day.disabled {
+    color: #ddd;
+}
+
+.datepicker-day:hover, .timepicker-time:hover {
+    background-color: #eee;
+}
+
+.datepicker-day.selected, .timepicker-time.selected {
+    background-color: #ec7825;
+    color: white;
+}
+
+.datepicker.ng-invalid > .datepicker-content > input, .timepicker.ng-invalid > .timepicker-content > input,
+.date-time-picker.ng-invalid .datepicker-content > input, .date-time-picker.ng-invalid .timepicker-content > input {
+    border-color: #e90b0b;
+    color: #e90b0b;
+}
+
+.datepicker-prev-month:hover, .datepicker-next-month:hover, .timepicker-control-meridiem:hover {
+    background: #eee;
+}
+
+.datepicker-menu, .timepicker-menu {
+    left: 4px;
+    margin-top: 0;
+    -webkit-box-shadow: 1.5px 2.5px 7px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 1.5px 2.5px 7px 0 rgba(0, 0, 0, 0.05);
+    padding: 0;
+    border: none;
+    position: absolute;
+    z-index: 1000;
+    min-width: 160px;
+    list-style: none;
+    font-size: 14px;
+    text-align: left;
+    background-color: #fff;
+    border-radius: 4px;
+    background-clip: padding-box;
+}
+
+.datepicker-menu > table tbody tr:last-child td, .timepicker-menu > table tbody tr:last-child td {
+    border-bottom: 1px solid #cecece;
+}
+
+.datepicker-menu > .table > thead > tr > th, .datepicker-menu > .table > thead > tr > td, .datepicker-menu > .table > tbody > tr > th, .datepicker-menu > .table > tbody > tr > td, .datepicker-menu > .table > tfoot > tr > th, .datepicker-menu > .table > tfoot > tr > td,
+.timepicker-menu > .table > thead > tr > th, .timepicker-menu > .table > thead > tr > td, .timepicker-menu > .table > tbody > tr > th, .timepicker-menu > .table > tbody > tr > td, .timepicker-menu > .table > tfoot > tr > th, .timepicker-menu > .table > tfoot > tr > td {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+
+.timepicker .timepicker-control-meridiem.active {
+    text-decoration: underline;
+    color: #ec7825;
+    opacity: 1;
+    background: transparent;
+}
+
+.date-time-picker > .datepicker {
+    width: 66.66666667%;
+    float: left;
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.date-time-picker > .timepicker {
+    width: 33.33333333%;
+    float: left;
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}

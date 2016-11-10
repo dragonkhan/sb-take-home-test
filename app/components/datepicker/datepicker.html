@@ -1,0 +1,36 @@
+<div class="datepicker">
+    <div class="datepicker-content">
+        <input class="datepicker-input" placeholder="Select date"
+               ng-value="inputLabel"
+               ng-click="toggleDatePickerMenu()">
+        <i class="icon fa fa-calendar"></i>
+        <div class="datepicker-menu" ng-show="isDatePickerMenuVisible">
+            <table>
+                <tbody>
+                <tr class="datepicker-controls">
+                    <td class="dactepicker-prev-month" ng-click="prevMonth()" rowspan="10">
+                        <i class="fa fa-2x fa-angle-left"></i>
+                    </td>
+                    <td class="datepicker-menu-title" colspan="7">{{curMonth.format('MMMM, YYYY')}}</td>
+                    <td class="datepicker-next-month" ng-click="nextMonth()" rowspan="10">
+                        <i class="fa fa-2x fa-angle-right"></i>
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-repeat="weekDayName in weekDayNames" class="datepicker-weekday">
+                        {{weekDayName}}
+                    </td>
+
+                </tr>
+                <tr ng-repeat="week in weeks">
+                    <td ng-repeat="day in week" ng-click="selectDay(day)" class="datepicker-day"
+                        ng-class="{selected:day.date==ngModel.getDate() && day.month==ngModel.getMonth() && day.year==ngModel.getFullYear(),faded:curMonth.month()!=day.month,disabled:day.isDisabled}">
+                        {{day.date}}
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>

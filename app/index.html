@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Take Home Test</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="app.css">
+    <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body ng-controller="MainController" class="container">
+<form name="testForm" class="row">
+    <date-time-picker class="col-xs-12 form-group" ng-model="order2.requestedDatetime"
+                      name="dateTimeInput" required
+                      sb-time-zone="{{order2.timeZone}}"
+                      sb-before-render-date-item="beforeRenderDate"
+                      sb-before-render-time-item="beforeRenderTime"></date-time-picker>
+    <div class="col-xs-12 form-group">Formatted: {{formatOrderDate(order2)||'null'}} {{order2.timeZone}}</div>
+    <div class="col-xs-12 form-group">Model: {{order2.requestedDatetime||'null'}}</div>
+    <div class="col-xs-12 form-group"><a class="btn btn-default" ng-click="changeTimeZone(order2)">Change time
+        zone</a></div>
+    <div class="col-xs-12 form-group"><a class="btn btn-default" ng-click="changeDateTime(order2)">Change date
+        time</a></div>
+    <div class="col-xs-12 form-group">Last generated: {{lastDateLabel}}</div>
+</form>
+
+
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/moment-timezone/moment-timezone.js"></script>
+<script src="app.js"></script>
+<script src="controllers/MainController.js"></script>
+<script src="components/datepicker/datepicker.js"></script>
+<script src="components/timepicker/timepicker.js"></script>
+<script src="components/date-time-picker/date-time-picker.js"></script>
+<script src="filters/timefilter.js"></script>
+</body>
+</html>
