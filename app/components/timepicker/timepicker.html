@@ -1,7 +1,7 @@
 <div class="timepicker">
     <div class="timepicker-content">
         <input class="timepicker-input" placeholder="Select time"
-               ng-value="ngModel | timefilter" ng-disabled="date==null"
+               ng-value="ngModel ? (ngModel | timefilter) : ''" ng-disabled="date==null"
                ng-click="toggleTimePickerMenu()">
         <i class="icon fa fa-clock-o"></i>
         <div class="timepicker-menu" ng-show="isTimePickerMenuVisible">
