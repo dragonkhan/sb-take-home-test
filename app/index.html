@@ -21,7 +21,7 @@
                       sb-time-zone="main.order2.timeZone"
                       sb-before-render-date-item="main.beforeRenderDate"
                       sb-before-render-time-item="main.beforeRenderTime"></date-time-picker>
-    <div class="col-xs-12 form-group">Formatted: {{main.formatOrderDate(order2)||'null'}} {{main.order2.timeZone}}</div>
+    <div class="col-xs-12 form-group">Formatted: {{main.formatOrderDate(main.order2)||'null'}} {{main.order2.timeZone}}</div>
     <div class="col-xs-12 form-group">Model: {{main.order2.requestedDatetime||'null'}}</div>
     <div class="col-xs-12 form-group"><a class="btn btn-default" ng-click="main.changeTimeZone(main.order2)">Change time
         zone</a></div>
