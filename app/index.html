@@ -14,7 +14,7 @@
     <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
 <body ng-controller="MainController" class="container">
-<form name="testForm" class="row">
+<form name="testForm" class="row" ng-cloak>
     <date-time-picker class="col-xs-12 form-group" ng-model="order2.requestedDatetime"
                       name="dateTimeInput" required
                       sb-time-zone="{{order2.timeZone}}"
