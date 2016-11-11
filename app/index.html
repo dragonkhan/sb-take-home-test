@@ -14,20 +14,20 @@
     <link rel="stylesheet" href="app.css">
     <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
-<body ng-controller="MainController" class="container">
+<body ng-controller="MainController as main" class="container">
 <form name="testForm" class="row" ng-cloak>
-    <date-time-picker class="col-xs-12 form-group" ng-model="order2.requestedDatetime"
+    <date-time-picker class="col-xs-12 form-group" ng-model="main.order2.requestedDatetime"
                       name="dateTimeInput" required
-                      sb-time-zone="{{order2.timeZone}}"
-                      sb-before-render-date-item="beforeRenderDate"
-                      sb-before-render-time-item="beforeRenderTime"></date-time-picker>
-    <div class="col-xs-12 form-group">Formatted: {{formatOrderDate(order2)||'null'}} {{order2.timeZone}}</div>
-    <div class="col-xs-12 form-group">Model: {{order2.requestedDatetime||'null'}}</div>
-    <div class="col-xs-12 form-group"><a class="btn btn-default" ng-click="changeTimeZone(order2)">Change time
+                      sb-time-zone="main.order2.timeZone"
+                      sb-before-render-date-item="main.beforeRenderDate"
+                      sb-before-render-time-item="main.beforeRenderTime"></date-time-picker>
+    <div class="col-xs-12 form-group">Formatted: {{main.formatOrderDate(order2)||'null'}} {{main.order2.timeZone}}</div>
+    <div class="col-xs-12 form-group">Model: {{main.order2.requestedDatetime||'null'}}</div>
+    <div class="col-xs-12 form-group"><a class="btn btn-default" ng-click="main.changeTimeZone(main.order2)">Change time
         zone</a></div>
-    <div class="col-xs-12 form-group"><a class="btn btn-default" ng-click="changeDateTime(order2)">Change date
+    <div class="col-xs-12 form-group"><a class="btn btn-default" ng-click="main.changeDateTime(main.order2)">Change date
         time</a></div>
-    <div class="col-xs-12 form-group">Last generated: {{lastDateLabel}}</div>
+    <div class="col-xs-12 form-group">Last generated: {{main.lastDateLabel}}</div>
 </form>
 
 

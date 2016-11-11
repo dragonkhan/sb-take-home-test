@@ -43,7 +43,7 @@ body {
     top: 13px;
 }
 
-.datepicker .datepicker-input, .timepicker .timepicker-input {
+.datepicker-content .datepicker-input, .timepicker-content .timepicker-input {
     padding-left: 42px;
     margin-bottom: 0 !important;
 }
@@ -106,8 +106,8 @@ body {
     color: white;
 }
 
-.datepicker.ng-invalid > .datepicker-content > input, .timepicker.ng-invalid > .timepicker-content > input,
-.date-time-picker.ng-invalid .datepicker-content > input, .date-time-picker.ng-invalid .timepicker-content > input {
+datepicker.ng-invalid > .datepicker-content > input, timepicker.ng-invalid > .timepicker-content > input,
+date-time-picker.ng-invalid .datepicker-content > input, date-time-picker.ng-invalid .timepicker-content > input {
     border-color: #e90b0b;
     color: #e90b0b;
 }
@@ -146,14 +146,14 @@ body {
     border-top: 1px solid #ddd;
 }
 
-.timepicker .timepicker-control-meridiem.active {
+timepicker .timepicker-control-meridiem.active {
     text-decoration: underline;
     color: #ec7825;
     opacity: 1;
     background: transparent;
 }
 
-.date-time-picker > .datepicker {
+date-time-picker datepicker {
     width: 66.66666667%;
     float: left;
     position: relative;
@@ -162,7 +162,7 @@ body {
     padding-left: 15px;
 }
 
-.date-time-picker > .timepicker {
+date-time-picker timepicker {
     width: 33.33333333%;
     float: left;
     position: relative;

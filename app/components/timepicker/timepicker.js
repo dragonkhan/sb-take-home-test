@@ -1,151 +1,149 @@
 'use strict';
 
 angular.module('myApp.components')
-    .directive('timepicker', [function () {
-        return {
-            templateUrl: "components/timepicker/timepicker.html",
-            restrict: "E",
-            replace: true,
-            scope: {
-                date: "=",
-                isDateRequired: "=",
-                ngModel: "=",
-                sbBeforeRenderItem: "="
-            },
-            controller: ["$scope", function ($scope) {
-                var watchers = [];
-                $scope.isTimePickerMenuVisible = false;
+    .component('timepicker', {
+        templateUrl: "components/timepicker/timepicker.html",
+        bindings: {
+            date: "=",
+            isDateRequired: "=",
+            ngModel: "=",
+            sbBeforeRenderItem: "="
+        },
+        controller: [function () {
+            var $ctrl = this;
+            $ctrl.$onInit = function () {
+                $ctrl.isTimePickerMenuVisible = false;
                 //
-                var AM = 'AM';
-                var PM = 'PM';
-                $scope.meridiems = [AM, PM];
-                $scope.selectedMeridiem = AM;
+                $ctrl.AM = 'AM';
+                $ctrl.PM = 'PM';
+                $ctrl.meridiems = [$ctrl.AM, $ctrl.PM];
+                $ctrl.selectedMeridiem = $ctrl.AM;
                 //
-                var hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-                var minutes = [0, 15, 30, 45];
-                var timesPerRow = 4;
-                var amTimesRows = [];
-                var pmTimesRows = [];
+                $ctrl.hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+                $ctrl.minutes = [0, 15, 30, 45];
+                $ctrl.timesPerRow = 4;
+                $ctrl.amTimesRows = [];
+                $ctrl.pmTimesRows = [];
+                //
+                refreshTimes();
+            };
 
-                function refreshTimes() {
-                    amTimesRows = [];
-                    pmTimesRows = [];
-                    var timesRow = [];
+            $ctrl.$doCheck = function () {
+                if ($ctrl.date != $ctrl.prevDate) {
+                    $ctrl.prevDate = $ctrl.date;
+                    onDateTimeChange();
+                }
+                if ($ctrl.ngModel != $ctrl.prevNgModel) {
+                    $ctrl.prevNgModel = $ctrl.ngModel;
+                    onDateTimeChange();
                     //
-                    if (!$scope.isDateRequired || $scope.date != null) {
-                        $scope.meridiems.forEach(function (meridiem) {
-                            hours.forEach(function (hour) {
-                                minutes.forEach(function (minute) {
-                                    var hour24 = meridiem == PM ? hour + 12 : hour;
-                                    var hour12 = hour;
-                                    if (hour == 0) {
-                                        hour12 = 12;
+                    if ($ctrl.ngModel) {
+                        if ($ctrl.ngModel.hour > 11) {
+                            $ctrl.setMeridiem($ctrl.PM);
+                        } else {
+                            $ctrl.setMeridiem($ctrl.AM);
+                        }
+                    }
+                }
+            };
+
+            function refreshTimes() {
+                $ctrl.amTimesRows = [];
+                $ctrl.pmTimesRows = [];
+                var timesRow = [];
+                //
+                if (!$ctrl.isDateRequired || $ctrl.date != null) {
+                    $ctrl.meridiems.forEach(function (meridiem) {
+                        $ctrl.hours.forEach(function (hour) {
+                            $ctrl.minutes.forEach(function (minute) {
+                                var hour24 = meridiem == $ctrl.PM ? hour + 12 : hour;
+                                var hour12 = hour;
+                                if (hour == 0) {
+                                    hour12 = 12;
+                                }
+                                // time object
+                                var time = {
+                                    hour: hour24,
+                                    hour12: hour12,
+                                    minute: minute,
+                                    meridiem: meridiem
+                                };
+                                // set disabled
+                                var beforeRenderItem = $ctrl.sbBeforeRenderItem || defaultBeforeRenderItem;
+                                beforeRenderItem(time, $ctrl.date);
+                                //
+                                timesRow.push(time);
+                                //
+                                if (timesRow.length == $ctrl.timesPerRow) {
+                                    if (meridiem == $ctrl.AM) {
+                                        $ctrl.amTimesRows.push(timesRow);
+                                    } else {
+                                        $ctrl.pmTimesRows.push(timesRow);
                                     }
-                                    // time object
-                                    var time = {
-                                        hour: hour24,
-                                        hour12: hour12,
-                                        minute: minute,
-                                        meridiem: meridiem
-                                    };
-                                    // set disabled
-                                    var beforeRenderItem = $scope.sbBeforeRenderItem || defaultBeforeRenderItem;
-                                    beforeRenderItem(time, $scope.date);
-                                    //
-                                    timesRow.push(time);
-                                    //
-                                    if (timesRow.length == timesPerRow) {
-                                        if (meridiem == AM) {
-                                            amTimesRows.push(timesRow);
-                                        } else {
-                                            pmTimesRows.push(timesRow);
-                                        }
-                                        timesRow = [];
-                                    }
-                                });
+                                    timesRow = [];
+                                }
                             });
                         });
-                        setTimeRows();
-                    }
-                }
-
-                function setTimeRows() {
-                    if ($scope.selectedMeridiem == AM) {
-                        $scope.timesRows = amTimesRows;
-                    } else {
-                        $scope.timesRows = pmTimesRows;
-                    }
-                }
-
-                function defaultBeforeRenderItem() {
-                }
-
-                refreshTimes();
-
-                $scope.setMeridiem = function (value) {
-                    $scope.selectedMeridiem = value;
+                    });
                     setTimeRows();
-                };
+                }
+            }
 
-                watchers.push($scope.$watch("date", function (newVal, oldVal) {
-                    onDateTimeChange();
-                }));
-                watchers.push($scope.$watch("ngModel", function (newVal, oldVal) {
-                    onDateTimeChange();
+            function setTimeRows() {
+                if ($ctrl.selectedMeridiem == $ctrl.AM) {
+                    $ctrl.timesRows = $ctrl.amTimesRows;
+                } else {
+                    $ctrl.timesRows = $ctrl.pmTimesRows;
+                }
+            }
+
+            function defaultBeforeRenderItem() {
+            }
+
+            $ctrl.setMeridiem = function (value) {
+                $ctrl.selectedMeridiem = value;
+                setTimeRows();
+            };
+
+            function onDateTimeChange() {
+                refreshTimes();
+                //
+                if ($ctrl.isDateRequired && !$ctrl.date) {
+                    $ctrl.ngModel = null;
+                } else {
+                    invalidateTimeIfNeeded();
+                }
+            }
+
+            function invalidateTimeIfNeeded() {
+                var time = $ctrl.ngModel;
+                var date = $ctrl.date;
+                // set time to null if it's disabled
+                if (time && $ctrl.sbBeforeRenderItem && date) {
+                    var timeCopy = angular.copy(time);
                     //
-                    if ($scope.ngModel) {
-                        if ($scope.ngModel.hour > 11) {
-                            $scope.setMeridiem(PM);
-                        } else {
-                            $scope.setMeridiem(AM);
-                        }
-                    }
-                }));
-                function onDateTimeChange() {
-                    refreshTimes();
+                    $ctrl.sbBeforeRenderItem(timeCopy, date);
                     //
-                    if ($scope.isDateRequired && !$scope.date) {
-                        $scope.ngModel = null;
-                    } else {
-                        invalidateTimeIfNeeded();
+                    if (timeCopy.isDisabled) {
+                        $ctrl.ngModel = null;
                     }
                 }
+            }
 
-                function invalidateTimeIfNeeded() {
-                    var time = $scope.ngModel;
-                    var date = $scope.date;
-                    // set time to null if it's disabled
-                    if (time && $scope.sbBeforeRenderItem && date) {
-                        var timeCopy = angular.copy(time);
-                        //
-                        $scope.sbBeforeRenderItem(timeCopy, date);
-                        //
-                        if (timeCopy.isDisabled) {
-                            $scope.ngModel = null;
-                        }
-                    }
+            //
+            $ctrl.selectTime = function (time) {
+                if (!time.isDisabled) {
+                    $ctrl.ngModel = {hour: time.hour, minute: time.minute};
+                    $ctrl.toggleTimePickerMenu();
                 }
-
-                //
-                $scope.selectTime = function (time) {
-                    if (!time.isDisabled) {
-                        $scope.ngModel = {hour: time.hour, minute: time.minute};
-                        $scope.toggleTimePickerMenu();
-                    }
-                };
-                //
-                $scope.toggleTimePickerMenu = function () {
-                    if (!$scope.isDateRequired && $scope.date == null) {
-                        $scope.isTimePickerMenuVisible = false;
-                    } else {
-                        $scope.isTimePickerMenuVisible = !$scope.isTimePickerMenuVisible;
-                    }
-                };
-                $scope.$on('$destroy', function () {
-                    while (watchers.length) {
-                        watchers.shift()();
-                    }
-                });
-            }]
-        }
-    }]);
+            };
+            //
+            $ctrl.toggleTimePickerMenu = function () {
+                if (!$ctrl.isDateRequired && $ctrl.date == null) {
+                    $ctrl.isTimePickerMenuVisible = false;
+                } else {
+                    $ctrl.isTimePickerMenuVisible = !$ctrl.isTimePickerMenuVisible;
+                }
+            };
+        }]
+    });

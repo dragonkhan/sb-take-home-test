@@ -1,27 +1,28 @@
 'use strict';
-angular.module("myApp").controller("MainController", ["$scope", "$timeout", function ($scope, $timeout) {
-    $scope.timeZones = ['America/Los_Angeles', 'America/New_York'];
-    $scope.order = {
+angular.module("myApp").controller("MainController", [function () {
+    var $ctrl = this;
+    $ctrl.timeZones = ['America/Los_Angeles', 'America/New_York'];
+    $ctrl.order = {
         requestedDatetime: null,
-        timeZone: $scope.timeZones[0]
+        timeZone: $ctrl.timeZones[0]
     };
-    $scope.order2 = {
-        requestedDatetime: moment.tz([2016, 11, 12, 12, 15], $scope.timeZones[0]).toDate(),
-        timeZone: $scope.timeZones[0]
+    $ctrl.order2 = {
+        requestedDatetime: moment.tz([2016, 11, 12, 12, 15], $ctrl.timeZones[0]).toDate(),
+        timeZone: $ctrl.timeZones[0]
     };
-    $scope.changeTimeZone = function (order) {
-        if (order.timeZone == $scope.timeZones[0]) {
-            order.timeZone = $scope.timeZones[1];
+    $ctrl.changeTimeZone = function (order) {
+        if (order.timeZone == $ctrl.timeZones[0]) {
+            order.timeZone = $ctrl.timeZones[1];
         } else {
-            order.timeZone = $scope.timeZones[0];
+            order.timeZone = $ctrl.timeZones[0];
         }
     };
-    $scope.changeDateTime = function (order) {
+    $ctrl.changeDateTime = function (order) {
         var month = getRandomInt10();
         var date = getRandomInt10(2) + 1;
         var hour = getRandomInt10(2);
         var dateMoment = moment.tz([2017, month, date, hour, 15], order.timeZone);
-        $scope.lastDateLabel = dateMoment.format();
+        $ctrl.lastDateLabel = dateMoment.format();
         order.requestedDatetime = dateMoment.toDate();
     };
     function getRandomInt10(multiplier) {
@@ -31,7 +32,7 @@ angular.module("myApp").controller("MainController", ["$scope", "$timeout", func
 
     //
     var now = moment();
-    $scope.beforeRenderDate = function (day) {
+    $ctrl.beforeRenderDate = function (day) {
         var isDisabled = true;
         if (day.year > now.year()) {
             isDisabled = false;
@@ -50,7 +51,7 @@ angular.module("myApp").controller("MainController", ["$scope", "$timeout", func
     var startTimeWke = {hour: 10, minute: 0};
     var endTimeWke = {hour: 15, minute: 45};
     //
-    $scope.beforeRenderTime = function (time, date) {
+    $ctrl.beforeRenderTime = function (time, date) {
         var isDisabled = true;
         //
         var hour = time.hour;
@@ -74,7 +75,7 @@ angular.module("myApp").controller("MainController", ["$scope", "$timeout", func
         }
         time.isDisabled = isDisabled;
     };
-    $scope.formatOrderDate = function (order) {
+    $ctrl.formatOrderDate = function (order) {
         var result = "";
         if (order && order.requestedDatetime) {
             var date = order.requestedDatetime;

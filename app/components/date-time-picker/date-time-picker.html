@@ -1,6 +1,4 @@
-<div class="date-time-picker">
-    <datepicker ng-model="date"
-                sb-before-render-item="sbBeforeRenderDateItem"></datepicker>
-    <timepicker ng-model="time" date="date" is-date-required="true"
-                sb-before-render-item="sbBeforeRenderTimeItem"></timepicker>
-</div>
+<datepicker ng-model="$ctrl.date"
+            sb-before-render-item="$ctrl.sbBeforeRenderDateItem"></datepicker>
+<timepicker ng-model="$ctrl.time" date="$ctrl.date" is-date-required="true"
+            sb-before-render-item="$ctrl.sbBeforeRenderTimeItem"></timepicker>

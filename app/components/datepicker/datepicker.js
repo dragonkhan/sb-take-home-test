@@ -1,32 +1,45 @@
 'use strict';
 angular.module('myApp.components')
-    .directive('datepicker', [function () {
-        return {
+    .component('datepicker', {
             templateUrl: "components/datepicker/datepicker.html",
-            restrict: "E",
-            replace: true,
-            scope: {
+            bindings: {
                 ngModel: "=",
                 sbBeforeRenderItem: "="
             },
-            controller: ["$scope", function ($scope) {
-                var watchers=[];
-                $scope.weekDayNames = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
-                $scope.isDatePickerMenuVisible = false;
-                $scope.curMonth = moment();
-                refreshCalendarWeeks();
-                //
-                $scope.nextMonth = function () {
-                    $scope.curMonth.add(1, "months");
+            controller: [function () {
+                var $ctrl = this;
+                $ctrl.$onInit = function () {
+                    $ctrl.weekDayNames = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+                    $ctrl.isDatePickerMenuVisible = false;
+                    $ctrl.curMonth = moment();
+                    //
                     refreshCalendarWeeks();
                 };
-                $scope.prevMonth = function () {
-                    $scope.curMonth.subtract(1, "months");
+                $ctrl.$doCheck = function () {
+                    if ($ctrl.ngModel != $ctrl.previousNgModel) {
+                        $ctrl.previousNgModel = $ctrl.ngModel
+                        if ($ctrl.ngModel == null) {
+                            $ctrl.curMonth = moment();
+                            $ctrl.inputLabel = null;
+                        } else {
+                            $ctrl.curMonth = moment($ctrl.ngModel);
+                            $ctrl.inputLabel = moment($ctrl.ngModel).format('dddd, MMMM Do, YYYY')
+                        }
+                        refreshCalendarWeeks();
+                    }
+                };
+                //
+                $ctrl.nextMonth = function () {
+                    $ctrl.curMonth.add(1, "months");
+                    refreshCalendarWeeks();
+                };
+                $ctrl.prevMonth = function () {
+                    $ctrl.curMonth.subtract(1, "months");
                     refreshCalendarWeeks();
                 };
                 //
                 function refreshCalendarWeeks() {
-                    var curMonth = $scope.curMonth;
+                    var curMonth = $ctrl.curMonth;
                     var start = curMonth.clone().startOf('month').startOf('week');
                     var end = curMonth.clone().endOf('month').endOf('week');
                     var cur = start;
@@ -40,7 +53,7 @@ angular.module('myApp.components')
                         // day object
                         var day = {date: dayNum, month: monthNum, year: cur.year()};
                         // set disabled
-                        var beforeRenderItem = $scope.sbBeforeRenderItem || defaultBeforeRenderItem;
+                        var beforeRenderItem = $ctrl.sbBeforeRenderItem || defaultBeforeRenderItem;
                         beforeRenderItem(day);
                         //
                         week.push(day);
@@ -50,37 +63,21 @@ angular.module('myApp.components')
                         }
                         cur.add(1, "days");
                     }
-                    $scope.weeks = weeks;
+                    $ctrl.weeks = weeks;
                 }
 
                 function defaultBeforeRenderItem() {
                 }
 
-                $scope.selectDay = function (day) {
+                $ctrl.selectDay = function (day) {
                     if (!day.isDisabled) {
-                        $scope.ngModel = $scope.curMonth.clone().month(day.month).date(day.date).toDate();
-                        $scope.toggleDatePickerMenu();
+                        $ctrl.ngModel = $ctrl.curMonth.clone().month(day.month).date(day.date).toDate();
+                        $ctrl.toggleDatePickerMenu();
                     }
                 };
-                watchers.push($scope.$watch("ngModel", function (newVal, oldVal) {
-                    if ($scope.ngModel == null) {
-                        $scope.curMonth = moment();
-                        $scope.inputLabel = null;
-                    } else {
-                        $scope.curMonth = moment($scope.ngModel);
-                        $scope.inputLabel = moment($scope.ngModel).format('dddd, MMMM Do, YYYY')
-                    }
-                    refreshCalendarWeeks();
-                }));
-                //
-                $scope.toggleDatePickerMenu = function () {
-                    $scope.isDatePickerMenuVisible = !$scope.isDatePickerMenuVisible;
+                $ctrl.toggleDatePickerMenu = function () {
+                    $ctrl.isDatePickerMenuVisible = !$ctrl.isDatePickerMenuVisible;
                 };
-                $scope.$on('$destroy', function () {
-                    while (watchers.length) {
-                        watchers.shift()();
-                    }
-                });
             }]
         }
-    }]);
+    );

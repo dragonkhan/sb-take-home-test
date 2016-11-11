@@ -1,98 +1,80 @@
 'use strict';
 angular.module('myApp.components')
-    .directive('dateTimePicker', [function () {
-        return {
+    .component('dateTimePicker',
+        {
             templateUrl: "components/date-time-picker/date-time-picker.html",
-            restrict: "E",
-            replace: true,
-            scope: {
+            bindings: {
                 ngModel: "=",
                 sbBeforeRenderDateItem: "=",
                 sbBeforeRenderTimeItem: "=",
-                sbTimeZone: "@"
+                sbTimeZone: "<"
             },
-            controller: ["$scope", "$timeout", function ($scope, $timeout) {
-                var watchers=[];
-                watchers.push($scope.$watch("ngModel", function (newVal, oldVal) {
-                    if (!isInnerUpdate) {
-                        if (newVal && oldVal) {
-                            if (!moment(newVal).isSame(moment(oldVal))) {
-                                initInnerModel();
-                            }
-                        } else {
+            controller: [function () {
+                var $ctrl = this;
+                $ctrl.$onInit = function () {
+                    initInnerModel();
+                };
+                $ctrl.$doCheck = function () {
+                    if ($ctrl.ngModel && $ctrl.prevNgModel) {
+                        if (!moment($ctrl.ngModel).isSame(moment($ctrl.prevNgModel))) {
+                            $ctrl.prevNgModel = $ctrl.ngModel;
                             initInnerModel();
                         }
+                    } else {
+                        $ctrl.prevNgModel = $ctrl.ngModel;
+                        initInnerModel();
                     }
-                }));
-                initInnerModel();
-
+                    var isModelDirty = false;
+                    if ($ctrl.sbTimeZone != $ctrl.prevSbTimeZone) {
+                        $ctrl.prevSbTimeZone = $ctrl.sbTimeZone;
+                        isModelDirty = true;
+                    }
+                    if ($ctrl.date != $ctrl.prevDate) {
+                        $ctrl.prevDate = $ctrl.date;
+                        isModelDirty = true;
+                    }
+                    if ($ctrl.time != $ctrl.prevTime) {
+                        $ctrl.prevTime = $ctrl.time;
+                        isModelDirty = true;
+                    }
+                    if (isModelDirty) {
+                        updateModel();
+                    }
+                };
                 function initInnerModel() {
-                    if ($scope.ngModel) {
+                    if ($ctrl.ngModel) {
                         var dateMoment;
-                        if ($scope.sbTimeZone) {
-                            dateMoment = moment.tz($scope.ngModel, $scope.sbTimeZone);
+                        if ($ctrl.sbTimeZone) {
+                            dateMoment = moment.tz($ctrl.ngModel, $ctrl.sbTimeZone);
                         } else {
-                            dateMoment = moment($scope.ngModel);
+                            dateMoment = moment($ctrl.ngModel);
                         }
                         //
-                        $scope.date = moment([dateMoment.year(), dateMoment.month(), dateMoment.date()]).toDate();
-                        $scope.time = {hour: dateMoment.hour(), minute: dateMoment.minute()};
+                        $ctrl.date = moment([dateMoment.year(), dateMoment.month(), dateMoment.date()]).toDate();
+                        $ctrl.time = {hour: dateMoment.hour(), minute: dateMoment.minute()};
                     }
                 }
-                //
-                var isModelDirty = false;
-                //
-                watchers.push($scope.$watch("sbTimeZone", function (newVal, oldVal) {
-                    onDateTimeChange();
-                }));
-                watchers.push($scope.$watch("date", function (newVal, oldVal) {
-                    onDateTimeChange();
-                }));
-                watchers.push($scope.$watch("time", function (newVal, oldVal) {
-                    onDateTimeChange();
-                }));
-                function onDateTimeChange() {
-                    isModelDirty = true;
-                    $scope.$evalAsync(function () {
-                        if (isModelDirty) {
-                            isModelDirty = false;
-                            updateModel();
-                        }
-                    });
-                }
-                //
-                var isInnerUpdate = false;
+
                 //
                 function updateModel() {
-                    var time = $scope.time;
-                    var date = $scope.date;
-                    //
-                    isInnerUpdate = true;
+                    var time = $ctrl.time;
+                    var date = $ctrl.date;
                     //
                     if (date && time) {
                         var tzArray = getTzArray(date, time);
-                        var newDateMoment = $scope.sbTimeZone ? moment.tz(tzArray, $scope.sbTimeZone) : moment(date).hour(time.hour).minute(time.minute);
+                        var newDateMoment = $ctrl.sbTimeZone ? moment.tz(tzArray, $ctrl.sbTimeZone) : moment(date).hour(time.hour).minute(time.minute);
                         //
-                        if (!$scope.ngModel || !newDateMoment.isSame(moment($scope.ngModel))) {
-                            $scope.ngModel = newDateMoment.toDate();
+                        if (!$ctrl.ngModel || !newDateMoment.isSame(moment($ctrl.ngModel))) {
+                            $ctrl.ngModel = newDateMoment.toDate();
                         }
                     } else {
-                        $scope.ngModel = null;
+                        $ctrl.ngModel = null;
                     }
-                    $timeout(function () {
-                        isInnerUpdate = false;
-                    });
                 }
 
                 function getTzArray(date, time) {
                     var tzArray = [date.getFullYear(), date.getMonth(), date.getDate(), time.hour, time.minute];
                     return tzArray;
                 }
-                $scope.$on('$destroy', function () {
-                    while (watchers.length) {
-                        watchers.shift()();
-                    }
-                });
             }]
-        }
-    }]);
+        });
